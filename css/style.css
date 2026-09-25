@@ -1,0 +1,59 @@
+.titulo {
+    font-size: 24px;
+    font-weight: bold;
+    text-align: center;
+    margin-top: 20px;
+}
+
+.estilo {
+    font-size: 18px;
+    font-weight: bold;
+    text-align: center;
+    margin-top: 10px;
+}
+
+.descricao {
+    font-size: 14px;
+    text-align: center;
+    margin-top: 5px;
+}
+
+.search-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.search-button {
+    position: relative;
+    z-index: 2;
+    background: none;
+    border: none;
+    color: #333;
+    cursor: pointer;
+    font-size: 20px;
+}
+
+.search-box {
+    position: absolute;
+    right: 0;
+    box-sizing: border-box;
+    width: 0;
+    height: 40px;
+    opacity: 0;
+    visibility: hidden;
+    padding: 0;
+    border: none;
+    outline: none;
+    border-radius: 20px;
+    overflow: hidden;
+    transition: all 0.4s ease;
+}
+
+.search-box.active {
+    width: 220px;
+    opacity: 1;
+    visibility: visible;
+    padding: 0 15px;
+    border: 1px solid #ccc;
+}

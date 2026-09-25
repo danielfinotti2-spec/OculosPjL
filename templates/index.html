@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Óculos</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+</head>
+<body>
+    <nav>
+        <p class="estilo">Escolha Seu Estilo</p>
+        <h1 class="titulo">Visao Boa</h1>
+        <p class="descricao">Encontre o par ideal para você!</p>
+    </nav>
+    <nav class="menu">
+        <ul class="menu-links">
+            <li><a href="#">Óculos de Sol</a></li>
+            <li><a href="#">Óculos de Grau</a></li>
+            <li><a href="#">Óculos Esportivos</a></li>
+            <li><a href="#">Lentes</a></li>
+        </ul>
+        <div class="menu-actions">
+            <a href="login.html" aria-label="Entrar"><i class="fa-solid fa-circle-user"></i></a>
+            <div class="search-container">
+                <button class="search-button" type="button" onclick="abrirPesquisa()" aria-label="Abrir pesquisa">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                </button>
+                <input type="text" class="search-box" id="searchBox" placeholder="Buscar..." aria-label="Buscar">
+                
+            </div>
+            <button class="cart-button" type="button" onclick="abrirCarrinho()" aria-label="Abrir carrinho">
+                <i class="fa-solid fa-cart-shopping"></i><span class="cart-count">2</span>
+            </button>
+        </div>
+    </nav>
+    <div id="overlay" class="overlay" onclick="fecharCarrinho()"></div>
+    <aside id="carrinho" class="carrinho" aria-label="Meu Carrinho" aria-hidden="true">
+        <div class="carrinho-header">
+            <h2>Meu Carrinho</h2>
+            <button type="button" onclick="fecharCarrinho()" class="fechar" aria-label="Fechar carrinho"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+        <div class="produtos">
+            <div class="produto">
+                <img src="https://via.placeholder.com/70" alt="Óculos de Sol">
+                <div class="produto-info"><h3>Óculos de Sol</h3><p>R$ 29,90</p><div class="quantidade"><button type="button">−</button><span>1</span><button type="button">+</button></div></div>
+                <button type="button" class="remover" aria-label="Remover Óculos de Sol"><i class="fa-solid fa-trash"></i></button>
+            </div>
+            <div class="produto">
+                <img src="https://via.placeholder.com/70" alt="Óculos de Grau">
+                <div class="produto-info"><h3>Óculos de Grau</h3><p>R$ 49,90</p><div class="quantidade"><button type="button">−</button><span>1</span><button type="button">+</button></div></div>
+                <button type="button" class="remover" aria-label="Remover Óculos de Grau"><i class="fa-solid fa-trash"></i></button>
+            </div>
+        </div>
+        <div class="carrinho-footer"><div class="total"><span>Total:</span><strong>R$ 79,80</strong></div><button type="button" class="finalizar">Finalizar compra</button></div>
+    </aside>
+    <script>
+        function abrirPesquisa() {
+            const searchBox = document.getElementById("searchBox");
+            searchBox.classList.toggle("active");
+            if (searchBox.classList.contains("active")) searchBox.focus();
+        }
+
+        function abrirCarrinho() {
+            document.getElementById("carrinho").classList.add("active");
+            document.getElementById("overlay").classList.add("active");
+            document.getElementById("carrinho").setAttribute("aria-hidden", "false");
+        }
+
+        function fecharCarrinho() {
+            document.getElementById("carrinho").classList.remove("active");
+            document.getElementById("overlay").classList.remove("active");
+            document.getElementById("carrinho").setAttribute("aria-hidden", "true");
+        }
+    </script>
+</body>
+</html>
