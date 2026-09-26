@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ produto.nome }} | Visão Boa</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+</head>
+<body>
+    <header class="site-header">
+        <a class="brand" href="{{ url_for('inicio') }}">Visão Boa</a>
+        <nav class="menu flex-nav" aria-label="Navegação principal">
+            <ul class="menu-links"><li><a href="{{ url_for('inicio') }}#catalogo">Produtos</a></li><li><a href="{{ url_for('inicio') }}#catalogo">Óculos de Sol</a></li><li><a href="{{ url_for('inicio') }}#catalogo">Óculos de Grau</a></li></ul>
+            <div class="menu-actions">
+                <a href="{{ url_for('login') }}" aria-label="Entrar"><i class="fa-solid fa-circle-user"></i></a>
+                <div class="search-container"><button class="search-button" type="button" onclick="abrirPesquisa()" aria-label="Abrir pesquisa"><i class="fa-solid fa-magnifying-glass"></i></button><input type="search" class="search-box" id="searchBox" placeholder="Buscar produtos..." aria-label="Buscar produtos"></div>
+                <button class="cart-button" type="button" onclick="abrirCarrinho()" aria-label="Abrir carrinho"><i class="fa-solid fa-cart-shopping"></i><span class="cart-count">0</span></button>
+            </div>
+        </nav>
+    </header>
+    <main class="catalogo detalhe-wrap">
+        <nav aria-label="Você está em"><ol class="breadcrumb-list"><li><a href="{{ url_for('inicio') }}">Início</a></li><li><a href="{{ url_for('inicio') }}#catalogo">{{ produto.categoria }}</a></li><li class="active">{{ produto.nome }}</li></ol></nav>
+        <section class="detalhe-produto">
+            <div class="detalhe-imagem"><img src="{{ produto.imagem }}" alt="{{ produto.nome }}"></div>
+            <div class="detalhe-info">
+                <span class="product-categoria">{{ produto.categoria }}</span>
+                <h1>{{ produto.nome }}</h1>
+                <p class="detalhe-preco">{{ produto.preco }}</p>
+                <div class="description"><p>{{ produto.descricao }}</p><p>Escolha conforto, qualidade e proteção para completar seu estilo. Consulte a disponibilidade de lentes e opções de ajuste.</p></div>
+                <div class="detalhe-acoes"><button class="add-to-cart" type="button" data-product-id="{{ produto.id }}"><i class="fa-solid fa-cart-shopping"></i> Adicionar ao carrinho</button><button class="favorite-button" type="button" aria-label="Favoritar {{ produto.nome }}" aria-pressed="false"><i class="fa-regular fa-heart"></i></button></div>
+            </div>
+        </section>
+        <section class="relacionados"><h2>Você também pode gostar</h2><div class="lista-produtos">
+            {% for item in produtos if item.id != produto.id %}
+            <a class="related-card" href="{{ url_for('detalhe_produto', produto_id=item.id) }}"><img src="{{ item.imagem }}" alt="{{ item.nome }}"><h3>{{ item.nome }}</h3><p>{{ item.preco }}</p></a>
+            {% endfor %}
+        </div></section>
+    </main>
+    <div id="overlay" class="overlay" onclick="fecharCarrinho()"></div>
+    <aside id="carrinho" class="carrinho" aria-label="Meu carrinho" aria-hidden="true"><div class="carrinho-header"><h2>Meu carrinho</h2><button type="button" onclick="fecharCarrinho()" class="fechar" aria-label="Fechar carrinho"><i class="fa-solid fa-xmark"></i></button></div><div class="produtos"></div><div class="carrinho-footer"><div class="total"><span>Total:</span><strong>R$ 0,00</strong></div><button type="button" class="finalizar">Finalizar compra</button></div></aside>
+    <script src="{{ url_for('static', filename='js/loja.js') }}"></script>
+</body>
+</html>

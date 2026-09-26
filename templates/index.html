@@ -13,7 +13,7 @@
         <h1 class="titulo">Visao Boa</h1>
         <p class="descricao">Encontre o par ideal para você!</p>
     </nav>
-    <nav class="menu">
+    <nav class="menu flex-nav">
         <ul class="menu-links">
             <li><a href="#">Óculos de Sol</a></li>
             <li><a href="#">Óculos de Grau</a></li>
@@ -21,7 +21,7 @@
             <li><a href="#">Lentes</a></li>
         </ul>
         <div class="menu-actions">
-            <a href="login.html" aria-label="Entrar"><i class="fa-solid fa-circle-user"></i></a>
+            <a href="{{ url_for('login') }}" aria-label="Entrar"><i class="fa-solid fa-circle-user"></i></a>
             <div class="search-container">
                 <button class="search-button" type="button" onclick="abrirPesquisa()" aria-label="Abrir pesquisa">
                     <i class="fa-solid fa-magnifying-glass"></i>
@@ -34,6 +34,67 @@
             </button>
         </div>
     </nav>
+    <main class="catalogo" id="catalogo">
+        <h2 class="catalogo-titulo">Nossos óculos</h2>
+        <section class="lista-produtos" aria-label="Produtos disponíveis">
+            <article class="product-card">
+                <span class="badge">Destaque</span>
+                <div class="product-tumb"><img src="https://images.unsplash.com/photo-1511499767150-a48a237f0083?auto=format&fit=crop&w=800&q=80" alt="Óculos de sol preto"></div>
+                <div class="product-details">
+                    <span class="product-categoria">Óculos de sol</span>
+                    <h3>Solar clássico</h3>
+                    <p>Armação leve e lentes com proteção UV para acompanhar seu dia.</p>
+                    <div class="product-bottom-details"><span class="product-price"><small>R$ 249,90</small>R$ 189,90</span><a class="product-cart" href="#" aria-label="Adicionar Solar clássico ao carrinho"><i class="fa-solid fa-cart-shopping"></i></a></div>
+                </div>
+            </article>
+            <article class="product-card">
+                <div class="product-tumb"><img src="https://images.unsplash.com/photo-1574258495973-f010dfbb5371?auto=format&fit=crop&w=800&q=80" alt="Óculos de armação transparente"></div>
+                <div class="product-details">
+                    <span class="product-categoria">Óculos de grau</span>
+                    <h3>Transparência urbana</h3>
+                    <p>Design moderno e confortável, ideal para usar durante todo o dia.</p>
+                    <div class="product-bottom-details"><span class="product-price">R$ 219,90</span><a class="product-cart" href="#" aria-label="Adicionar Transparência urbana ao carrinho"><i class="fa-solid fa-cart-shopping"></i></a></div>
+                </div>
+            </article>
+            <article class="product-card">
+                <span class="badge">Novo</span>
+                <div class="product-tumb"><img src="https://images.unsplash.com/photo-1572635196237-14b3f281503f?auto=format&fit=crop&w=800&q=80" alt="Óculos de sol com armação marrom"></div>
+                <div class="product-details">
+                    <span class="product-categoria">Óculos de sol</span>
+                    <h3>Marrom retrô</h3>
+                    <p>Um toque clássico com lentes escuras e armação marcante.</p>
+                    <div class="product-bottom-details"><span class="product-price">R$ 199,90</span><a class="product-cart" href="#" aria-label="Adicionar Marrom retrô ao carrinho"><i class="fa-solid fa-cart-shopping"></i></a></div>
+                </div>
+            </article>
+            <article class="product-card">
+                <div class="product-tumb"><img src="https://images.unsplash.com/photo-1508296695146-257a814070b4?auto=format&fit=crop&w=800&q=80" alt="Óculos de sol estilo aviador"></div>
+                <div class="product-details">
+                    <span class="product-categoria">Óculos de sol</span>
+                    <h3>Aviador dourado</h3>
+                    <p>Leveza e personalidade em um modelo que nunca sai de moda.</p>
+                    <div class="product-bottom-details"><span class="product-price"><small>R$ 279,90</small>R$ 229,90</span><a class="product-cart" href="#" aria-label="Adicionar Aviador dourado ao carrinho"><i class="fa-solid fa-cart-shopping"></i></a></div>
+                </div>
+            </article>
+            <article class="product-card">
+                <div class="product-tumb"><img src="https://images.unsplash.com/photo-1614715838608-dd527c46231d?auto=format&fit=crop&w=800&q=80" alt="Óculos esportivo"></div>
+                <div class="product-details">
+                    <span class="product-categoria">Esportivo</span>
+                    <h3>Sport movimento</h3>
+                    <p>Ajuste firme e confortável para seus treinos e passeios ao ar livre.</p>
+                    <div class="product-bottom-details"><span class="product-price">R$ 259,90</span><a class="product-cart" href="#" aria-label="Adicionar Sport movimento ao carrinho"><i class="fa-solid fa-cart-shopping"></i></a></div>
+                </div>
+            </article>
+            <article class="product-card">
+                <div class="product-tumb"><img src="https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=800&q=80" alt="Pessoa usando óculos de grau"></div>
+                <div class="product-details">
+                    <span class="product-categoria">Óculos de grau</span>
+                    <h3>Essencial redondo</h3>
+                    <p>Armação versátil para completar seu estilo em qualquer ocasião.</p>
+                    <div class="product-bottom-details"><span class="product-price">R$ 189,90</span><a class="product-cart" href="#" aria-label="Adicionar Essencial redondo ao carrinho"><i class="fa-solid fa-cart-shopping"></i></a></div>
+                </div>
+            </article>
+        </section>
+    </main>
     <div id="overlay" class="overlay" onclick="fecharCarrinho()"></div>
     <aside id="carrinho" class="carrinho" aria-label="Meu Carrinho" aria-hidden="true">
         <div class="carrinho-header">
@@ -54,24 +115,6 @@
         </div>
         <div class="carrinho-footer"><div class="total"><span>Total:</span><strong>R$ 79,80</strong></div><button type="button" class="finalizar">Finalizar compra</button></div>
     </aside>
-    <script>
-        function abrirPesquisa() {
-            const searchBox = document.getElementById("searchBox");
-            searchBox.classList.toggle("active");
-            if (searchBox.classList.contains("active")) searchBox.focus();
-        }
-
-        function abrirCarrinho() {
-            document.getElementById("carrinho").classList.add("active");
-            document.getElementById("overlay").classList.add("active");
-            document.getElementById("carrinho").setAttribute("aria-hidden", "false");
-        }
-
-        function fecharCarrinho() {
-            document.getElementById("carrinho").classList.remove("active");
-            document.getElementById("overlay").classList.remove("active");
-            document.getElementById("carrinho").setAttribute("aria-hidden", "true");
-        }
-    </script>
+    <script src="{{ url_for('static', filename='js/loja.js') }}"></script>
 </body>
 </html>
