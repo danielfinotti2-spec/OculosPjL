@@ -6,6 +6,15 @@ const lerStorage = (chave, padrao) => {
 let carrinho = lerStorage("oculos-carrinho", []);
 let favoritos = lerStorage("oculos-favoritos", []);
 
+document.querySelectorAll(".toggle-nav").forEach(botao => {
+    const links = botao.parentElement.querySelector(".menu-links");
+    botao.addEventListener("click", () => {
+        const aberto = links.classList.toggle("active");
+        botao.setAttribute("aria-expanded", String(aberto));
+        botao.setAttribute("aria-label", aberto ? "Fechar menu" : "Abrir menu");
+    });
+});
+
 function salvarCarrinho() {
     localStorage.setItem("oculos-carrinho", JSON.stringify(carrinho));
     renderizarCarrinho();

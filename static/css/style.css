@@ -124,6 +124,7 @@
 .menu.flex-nav { gap: 20px; padding: 12px 24px; border-top: 1px solid #eee; border-bottom: 1px solid #eee; }
 .menu.flex-nav .menu-links a { color: #444; font-size: 14px; }
 .menu.flex-nav .menu-links a:hover { color: #c48b19; }
+.toggle-nav { display: none; border: 0; background: transparent; color: #333; font-size: 22px; cursor: pointer; }
 .site-header { border-bottom: 1px solid #eee; }
 .site-header .menu { border: 0; }
 .brand { display: block; padding: 18px 24px 8px; color: #292929; font-size: 24px; font-weight: 700; text-align: center; }
@@ -153,9 +154,19 @@
     .catalogo { margin-top: 32px; padding: 0 16px; }
     .lista-produtos { grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 16px; }
     .product-tumb { height: 190px; }
-    .menu.flex-nav { flex-wrap: wrap; justify-content: center; padding: 12px; }
-    .menu.flex-nav .menu-links { flex-wrap: wrap; justify-content: center; gap: 12px; }
+    .menu.flex-nav { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 0; padding: 8px 16px; }
+    .menu.flex-nav .toggle-nav { display: inline-flex; align-items: center; justify-content: center; min-width: 40px; min-height: 40px; }
+    .menu.flex-nav .menu-links { display: none; order: 3; flex: 0 0 100%; flex-wrap: nowrap; justify-content: center; gap: clamp(12px, 4vw, 24px); padding: 12px 0 4px; }
+    .menu.flex-nav .menu-links.active { display: flex; }
+    .menu.flex-nav .menu-links li { margin: 0; }
+    .menu.flex-nav .menu-links a { white-space: nowrap; font-size: 14px; }
+    .menu.flex-nav .menu-actions { order: 2; gap: 14px; }
     .detalhe-produto { grid-template-columns: 1fr; gap: 24px; }
     .detalhe-imagem { min-height: 280px; }
     .detalhe-imagem img { height: 300px; }
+}
+
+@media (max-width: 380px) {
+    .menu.flex-nav .menu-links { gap: 9px; }
+    .menu.flex-nav .menu-links a { font-size: 12px; }
 }
