@@ -4,17 +4,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Óculos</title>
-    <link rel="stylesheet" href="/css/style.css?v=menu-drawer-1">
+    <link rel="stylesheet" href="/css/style.css?v=menu-drawer-2">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
 </head>
 <body>
     <nav class="hero-head" id="topo">
-        <h1 class="titulo">Visão Boa Boa</h1>
+        <h1 class="titulo">Visão Boa</h1>
     </nav>
     <nav class="menu flex-nav">
         <button class="toggle-nav" type="button" aria-label="Abrir menu" aria-expanded="false"><i class="fa-solid fa-bars"></i></button>
         <ul class="menu-links" id="menuLinks">
-            <li class="menu-drawer-close"><button class="menu-close" type="button" aria-label="Fechar menu"><i class="fa-solid fa-xmark" aria-hidden="true"></i></button></li>
+            <li class="menu-drawer-close"><a class="menu-drawer-brand" href="/">Visão Boa</a><button class="menu-close" type="button" aria-label="Fechar menu"><i class="fa-solid fa-xmark" aria-hidden="true"></i></button></li>
             <li><a href="#">Óculos de Sol</a></li>
             <li><a href="#">Óculos de Grau</a></li>
             <li><a href="#">Óculos Esportivos</a></li>
@@ -118,6 +118,6 @@
         <div class="carrinho-footer"><div class="total"><span>Total:</span><strong>R$ 79,80</strong></div><button type="button" class="finalizar">Finalizar compra</button></div>
 </aside>
     {% include 'partials/rodape.html' %}
-    <script src="/js/loja.js?v=auth-gate-1"></script>
+    <script src="/js/loja.js?v=menu-drawer-1"></script>
 </body>
 </html>
