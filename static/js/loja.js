@@ -2,9 +2,15 @@ const lerStorage = (chave, padrao) => {
     try { return JSON.parse(localStorage.getItem(chave)) ?? padrao; }
     catch { return padrao; }
 };
+const gravarStorage = (chave, valor) => {
+    try { localStorage.setItem(chave, JSON.stringify(valor)); }
+    catch { /* Keep controls usable when the browser blocks storage. */ }
+};
 
 let carrinho = lerStorage("oculos-carrinho", []);
 let favoritos = lerStorage("oculos-favoritos", []);
+if (!Array.isArray(carrinho)) carrinho = [];
+if (!Array.isArray(favoritos)) favoritos = [];
 
 const menuDrawerOverlay = document.createElement("div");
 menuDrawerOverlay.className = "menu-overlay";
@@ -39,7 +45,14 @@ document.querySelectorAll(".toggle-nav").forEach(botao => {
         fechar?.focus();
     });
     fechar?.addEventListener("click", fecharMenuLateral);
-    menu?.querySelectorAll("a").forEach(link => link.addEventListener("click", fecharMenuLateral));
+    menu?.querySelectorAll("a").forEach(link => link.addEventListener("click", event => {
+        if (link.dataset.category) {
+            event.preventDefault();
+            window.filtrarCategoria?.(link.dataset.category);
+            document.getElementById("catalogo")?.scrollIntoView({ behavior: "smooth", block: "start" });
+        }
+        fecharMenuLateral();
+    }));
 });
 menuDrawerOverlay.addEventListener("click", fecharMenuLateral);
 
@@ -68,7 +81,7 @@ document.querySelectorAll(".menu-links").forEach(menu => {
 });
 
 function salvarCarrinho() {
-    localStorage.setItem("oculos-carrinho", JSON.stringify(carrinho));
+    gravarStorage("oculos-carrinho", carrinho);
     renderizarCarrinho();
 }
 
@@ -130,8 +143,15 @@ function fecharCarrinho() {
 
 function abrirPesquisa() {
     const input = document.getElementById("searchBox");
-    input?.classList.toggle("active");
-    if (input?.classList.contains("active")) input.focus();
+    if (!input) return;
+    const aberta = !input.classList.contains("active");
+    input.classList.toggle("active", aberta);
+    document.querySelectorAll(".search-button").forEach(botao => botao.setAttribute("aria-expanded", String(aberta)));
+    if (aberta) input.focus();
+    else {
+        input.value = "";
+        input.dispatchEvent(new Event("input", { bubbles: true }));
+    }
 }
 
 function adicionarAoCarrinho(dados) {
@@ -197,20 +217,10 @@ miniaturasProduto.forEach((miniatura, index) => {
     miniatura.addEventListener("click", () => {
         const imagemPrincipal = document.getElementById("imagem-principal-produto");
         if (!imagemPrincipal || !miniatura.dataset.image) return;
-        const requisicao = Number(imagemPrincipal.dataset.troca || 0) + 1;
-        imagemPrincipal.dataset.troca = String(requisicao);
-        const novaImagem = new Image();
-        novaImagem.onload = () => {
-            if (Number(imagemPrincipal.dataset.troca) !== requisicao) return;
-            imagemPrincipal.classList.add("trocando");
-            window.setTimeout(() => {
-                if (Number(imagemPrincipal.dataset.troca) !== requisicao) return;
-                imagemPrincipal.src = novaImagem.src;
-                requestAnimationFrame(() => imagemPrincipal.classList.remove("trocando"));
-            }, 320);
-        };
-        novaImagem.onerror = () => imagemPrincipal.classList.remove("trocando");
-        novaImagem.src = miniatura.dataset.image;
+        imagemPrincipal.classList.add("trocando");
+        imagemPrincipal.src = miniatura.dataset.image;
+        imagemPrincipal.alt = miniatura.querySelector("img")?.alt || `Foto ${index + 1} do produto`;
+        window.setTimeout(() => imagemPrincipal.classList.remove("trocando"), 220);
         miniaturasProduto.forEach(item => {
             const ativa = item === miniatura;
             item.classList.toggle("ativa", ativa);
@@ -226,10 +236,55 @@ miniaturasProduto.forEach((miniatura, index) => {
     });
 });
 
+const areaImagemProduto = document.querySelector(".detalhe-imagem");
+if (areaImagemProduto && miniaturasProduto.length > 1) {
+    areaImagemProduto.setAttribute("role", "button");
+    areaImagemProduto.setAttribute("tabindex", "0");
+    areaImagemProduto.setAttribute("aria-label", "Mostrar próxima foto do produto");
+    const proximaFoto = () => {
+        const atual = miniaturasProduto.findIndex(item => item.getAttribute("aria-pressed") === "true");
+        miniaturasProduto[(atual + 1) % miniaturasProduto.length].click();
+    };
+    areaImagemProduto.addEventListener("click", proximaFoto);
+    areaImagemProduto.addEventListener("keydown", event => {
+        if (event.key === "Enter" || event.key === " ") {
+            event.preventDefault();
+            proximaFoto();
+        }
+    });
+}
+
 const listaHome = document.querySelector(".catalogo-home .lista-produtos");
 if (listaHome) {
     const ordemNovidades = [1, 2, 3, 4, 5, 6];
-    const ordemMaisVendidos = [1, 4, 3, 2, 6, 5];
+    const ordemMaisVendidos = [4, 2, 5, 3, 6, 1];
+    window.filtrarCategoria = function filtrarCategoria(categoria) {
+        const normalizar = texto => texto.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+        const cards = [...listaHome.querySelectorAll(".product-card")];
+        let encontrados = 0;
+        cards.forEach(card => {
+            const textoCategoria = normalizar(card.querySelector(".product-categoria")?.textContent || "");
+            const exibir = categoria === "lentes"
+                ? normalizar(card.textContent).includes("lente")
+                : categoria === "sol" ? textoCategoria.includes("sol")
+                : categoria === "grau" ? textoCategoria.includes("grau")
+                : categoria === "esportivo" ? textoCategoria.includes("esport")
+                : true;
+            card.hidden = !exibir;
+            if (exibir) encontrados += 1;
+        });
+        const status = document.querySelector(".catalogo-status");
+        if (status) {
+            status.hidden = encontrados > 0;
+            status.textContent = encontrados ? "" : "Ainda não temos produtos desta categoria. Confira as opções de armações disponíveis.";
+        }
+        document.querySelectorAll(".catalogo-tab").forEach(tab => {
+            tab.classList.remove("active");
+            tab.setAttribute("aria-pressed", "false");
+        });
+    };
+    const categoriaInicial = new URLSearchParams(window.location.search).get("categoria");
+    if (categoriaInicial) window.filtrarCategoria(categoriaInicial);
     document.querySelectorAll(".catalogo-tab").forEach(tab => tab.addEventListener("click", () => {
         document.querySelectorAll(".catalogo-tab").forEach(item => {
             const ativa = item === tab;
@@ -239,6 +294,9 @@ if (listaHome) {
         const ordem = tab.dataset.sort === "mais-vendidos" ? ordemMaisVendidos : ordemNovidades;
         const cardsPorId = new Map([...listaHome.querySelectorAll(".product-card")].map(card => [Number(card.dataset.productId), card]));
         ordem.forEach(id => { const card = cardsPorId.get(id); if (card) listaHome.append(card); });
+        listaHome.querySelectorAll(".product-card").forEach(card => { card.hidden = false; });
+        const status = document.querySelector(".catalogo-status");
+        if (status) status.hidden = true;
     }));
 }
 
@@ -257,7 +315,7 @@ document.querySelectorAll(".detalhe-acoes .favorite-button").forEach(botao => {
         if (!id) return;
         const ativo = favoritos.includes(id);
         favoritos = ativo ? favoritos.filter(item => item !== id) : [...favoritos, id];
-        localStorage.setItem("oculos-favoritos", JSON.stringify(favoritos));
+        gravarStorage("oculos-favoritos", favoritos);
         atualizarCoracao(botao, !ativo);
     });
 });
@@ -280,7 +338,7 @@ document.querySelector(".produtos")?.addEventListener("click", event => {
 
 document.getElementById("searchBox")?.addEventListener("input", event => {
     const termo = event.target.value.toLocaleLowerCase("pt-BR");
-    document.querySelectorAll(".product-card").forEach(card => {
+    document.querySelectorAll(".product-card, .related-card").forEach(card => {
         card.hidden = !card.textContent.toLocaleLowerCase("pt-BR").includes(termo);
     });
 });
@@ -331,11 +389,11 @@ if (relatedSection) {
     const produtoAtual = relatedSection.dataset.currentId;
     const vistos = lerStorage("oculos-vistos-recentemente", []).filter(id => String(id) !== produtoAtual);
     const idsVistos = [produtoAtual, ...vistos].filter((id, index, todos) => todos.indexOf(id) === index).slice(0, 8);
-    localStorage.setItem("oculos-vistos-recentemente", JSON.stringify(idsVistos));
+    gravarStorage("oculos-vistos-recentemente", idsVistos);
     const catalogoScript = document.getElementById("catalogo-produtos");
     let produtosDisponiveis = [];
     try { produtosDisponiveis = JSON.parse(catalogoScript?.textContent || "[]"); } catch { produtosDisponiveis = []; }
-    localStorage.setItem("oculos-catalogo", JSON.stringify(produtosDisponiveis));
+    gravarStorage("oculos-catalogo", produtosDisponiveis);
 
     const gradeRecentes = relatedSection.querySelector("#vistos-recentemente .related-grid");
     const criarCard = produto => {

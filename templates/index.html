@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Óculos</title>
-    <link rel="stylesheet" href="/css/style.css?v=menu-drawer-2">
+    <link rel="stylesheet" href="/css/style.css?v=buttons-fix-2">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
 </head>
 <body>
@@ -14,16 +14,16 @@
     <nav class="menu flex-nav">
         <button class="toggle-nav" type="button" aria-label="Abrir menu" aria-expanded="false"><i class="fa-solid fa-bars"></i></button>
         <ul class="menu-links" id="menuLinks">
-            <li class="menu-drawer-close"><a class="menu-drawer-brand" href="/">Visão Boa</a><button class="menu-close" type="button" aria-label="Fechar menu"><i class="fa-solid fa-xmark" aria-hidden="true"></i></button></li>
-            <li><a href="#">Óculos de Sol</a></li>
-            <li><a href="#">Óculos de Grau</a></li>
-            <li><a href="#">Óculos Esportivos</a></li>
-            <li><a href="#">Lentes</a></li>
+            <li class="menu-drawer-close"><a class="menu-drawer-brand" href="/">Visão Boa</a><button class="menu-close" type="button" aria-label="Fechar menu"><span aria-hidden="true">×</span></button></li>
+            <li><a href="#catalogo" data-category="sol">Óculos de Sol</a></li>
+            <li><a href="#catalogo" data-category="grau">Óculos de Grau</a></li>
+            <li><a href="#catalogo" data-category="esportivo">Óculos Esportivos</a></li>
+            <li><a href="#catalogo" data-category="lentes">Lentes</a></li>
         </ul>
         <div class="menu-actions">
             <a href="{{ url_for('login') }}" aria-label="Entrar"><i class="fa-solid fa-circle-user"></i></a>
             <div class="search-container">
-                <button class="search-button" type="button" onclick="abrirPesquisa()" aria-label="Abrir pesquisa">
+                <button class="search-button" type="button" onclick="abrirPesquisa()" aria-label="Abrir pesquisa" aria-expanded="false">
                     <i class="fa-solid fa-magnifying-glass"></i>
                 </button>
                 <input type="text" class="search-box" id="searchBox" placeholder="Buscar..." aria-label="Buscar">
@@ -97,6 +97,7 @@
                 </div>
             </article>
         </section>
+        <p class="catalogo-status" role="status" aria-live="polite" hidden></p>
     </main>
     {% include 'partials/aviso-login.html' %}
     <div id="overlay" class="overlay" onclick="fecharCarrinho()"></div>
@@ -118,6 +119,6 @@
         <div class="carrinho-footer"><div class="total"><span>Total:</span><strong>R$ 79,80</strong></div><button type="button" class="finalizar">Finalizar compra</button></div>
 </aside>
     {% include 'partials/rodape.html' %}
-    <script src="/js/loja.js?v=menu-drawer-1"></script>
+    <script src="/js/loja.js?v=buttons-fix-2"></script>
 </body>
 </html>

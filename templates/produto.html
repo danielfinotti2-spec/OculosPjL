@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ produto.nome }} | Visão Boa</title>
-    <link rel="stylesheet" href="/css/style.css?v=menu-drawer-2">
+    <link rel="stylesheet" href="/css/style.css?v=buttons-fix-2">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
 </head>
 <body>
@@ -12,10 +12,10 @@
         <a class="brand" href="{{ url_for('inicio') }}">Visão Boa</a>
         <nav class="menu flex-nav" aria-label="Navegação principal">
             <button class="toggle-nav" type="button" aria-label="Abrir menu" aria-expanded="false"><i class="fa-solid fa-bars"></i></button>
-            <ul class="menu-links"><li class="menu-drawer-close"><a class="menu-drawer-brand" href="{{ url_for('inicio') }}">Visão Boa</a><button class="menu-close" type="button" aria-label="Fechar menu"><i class="fa-solid fa-xmark" aria-hidden="true"></i></button></li><li><a href="{{ url_for('inicio') }}#catalogo">Óculos de Sol</a></li><li><a href="{{ url_for('inicio') }}#catalogo">Óculos de Grau</a></li><li><a href="{{ url_for('inicio') }}#catalogo">Óculos Esportivos</a></li><li><a href="{{ url_for('inicio') }}#catalogo">Lentes</a></li></ul>
+            <ul class="menu-links"><li class="menu-drawer-close"><a class="menu-drawer-brand" href="{{ url_for('inicio') }}">Visão Boa</a><button class="menu-close" type="button" aria-label="Fechar menu"><span aria-hidden="true">×</span></button></li><li><a href="{{ url_for('inicio') }}?categoria=sol#catalogo">Óculos de Sol</a></li><li><a href="{{ url_for('inicio') }}?categoria=grau#catalogo">Óculos de Grau</a></li><li><a href="{{ url_for('inicio') }}?categoria=esportivo#catalogo">Óculos Esportivos</a></li><li><a href="{{ url_for('inicio') }}?categoria=lentes#catalogo">Lentes</a></li></ul>
             <div class="menu-actions">
                 <a href="{{ url_for('login') }}" aria-label="Entrar"><i class="fa-solid fa-circle-user"></i></a>
-                <div class="search-container"><button class="search-button" type="button" onclick="abrirPesquisa()" aria-label="Abrir pesquisa"><i class="fa-solid fa-magnifying-glass"></i></button><input type="search" class="search-box" id="searchBox" placeholder="Buscar produtos..." aria-label="Buscar produtos"></div>
+                <div class="search-container"><button class="search-button" type="button" onclick="abrirPesquisa()" aria-label="Abrir pesquisa" aria-expanded="false"><i class="fa-solid fa-magnifying-glass"></i></button><input type="search" class="search-box" id="searchBox" placeholder="Buscar produtos..." aria-label="Buscar produtos"></div>
                 <button class="cart-button" type="button" onclick="abrirCarrinho()" aria-label="Abrir carrinho"><i class="fa-solid fa-cart-shopping"></i><span class="cart-count">0</span></button>
             </div>
         </nav>
@@ -137,7 +137,7 @@
     <aside id="carrinho" class="carrinho" aria-label="Meu carrinho" aria-hidden="true"><div class="carrinho-header"><h2>Meu carrinho</h2><button type="button" onclick="fecharCarrinho()" class="fechar" aria-label="Fechar carrinho"><i class="fa-solid fa-xmark"></i></button></div><div class="produtos"></div><div class="carrinho-footer"><div class="total"><span>Total:</span><strong>R$ 0,00</strong></div><button type="button" class="finalizar">Finalizar compra</button></div></aside>
     {% include 'partials/rodape.html' %}
     <script type="application/json" id="catalogo-produtos">{{ produtos|tojson }}</script>
-    <script src="/js/loja.js?v=menu-drawer-1"></script>
+    <script src="/js/loja.js?v=buttons-fix-2"></script>
     <script src="/js/centralajuda.js?v=produto-faq-1"></script>
 </body>
 </html>
