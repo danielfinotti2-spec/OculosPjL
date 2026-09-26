@@ -4,15 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ produto.nome }} | Visão Boa</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="/css/style.css?v=cart-drawer-1">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
 </head>
 <body>
-    <header class="site-header">
+    <header class="site-header" id="topo">
         <a class="brand" href="{{ url_for('inicio') }}">Visão Boa</a>
         <nav class="menu flex-nav" aria-label="Navegação principal">
             <button class="toggle-nav" type="button" aria-label="Abrir menu" aria-expanded="false"><i class="fa-solid fa-bars"></i></button>
-            <ul class="menu-links"><li><a href="{{ url_for('inicio') }}#catalogo">Produtos</a></li><li><a href="{{ url_for('inicio') }}#catalogo">Óculos de Sol</a></li><li><a href="{{ url_for('inicio') }}#catalogo">Óculos de Grau</a></li></ul>
+            <ul class="menu-links"><li class="menu-drawer-close"><button class="menu-close" type="button" aria-label="Fechar menu"><i class="fa-solid fa-xmark" aria-hidden="true"></i></button></li><li><a href="{{ url_for('inicio') }}#catalogo">Produtos</a></li><li><a href="{{ url_for('inicio') }}#catalogo">Óculos de Sol</a></li><li><a href="{{ url_for('inicio') }}#catalogo">Óculos de Grau</a></li></ul>
             <div class="menu-actions">
                 <a href="{{ url_for('login') }}" aria-label="Entrar"><i class="fa-solid fa-circle-user"></i></a>
                 <div class="search-container"><button class="search-button" type="button" onclick="abrirPesquisa()" aria-label="Abrir pesquisa"><i class="fa-solid fa-magnifying-glass"></i></button><input type="search" class="search-box" id="searchBox" placeholder="Buscar produtos..." aria-label="Buscar produtos"></div>
@@ -23,23 +23,121 @@
     <main class="catalogo detalhe-wrap">
         <nav aria-label="Você está em"><ol class="breadcrumb-list"><li><a href="{{ url_for('inicio') }}">Início</a></li><li><a href="{{ url_for('inicio') }}#catalogo">{{ produto.categoria }}</a></li><li class="active">{{ produto.nome }}</li></ol></nav>
         <section class="detalhe-produto">
-            <div class="detalhe-imagem"><img src="{{ produto.imagem }}" alt="{{ produto.nome }}"></div>
+            <div class="detalhe-galeria">
+                <div class="detalhe-imagem"><img id="imagem-principal-produto" src="{{ produto.imagem }}" alt="Imagem ilustrativa do modelo {{ produto.nome }}" fetchpriority="high"></div>
+                <div class="detalhe-miniaturas" role="group" aria-label="Mais fotos do produto">
+                    <button class="detalhe-miniatura ativa" type="button" aria-label="Ver foto 1 de {{ produto.nome }}" aria-pressed="true" data-image="{{ produto.imagem }}">
+                        <img src="{{ produto.imagem }}" alt="" loading="lazy">
+                    </button>
+                    {% for foto_alternativa in produtos if foto_alternativa.id != produto.id %}
+                    {% if loop.index <= 4 %}
+                    <button class="detalhe-miniatura" type="button" aria-label="Ver foto {{ loop.index + 1 }} de {{ produto.nome }}" aria-pressed="false" data-image="{{ foto_alternativa.imagem }}">
+                        <img src="{{ foto_alternativa.imagem }}" alt="" loading="lazy">
+                    </button>
+                    {% endif %}
+                    {% endfor %}
+                </div>
+                <p class="detalhe-foto-legenda" aria-live="polite">Foto 1 de 5</p>
+            </div>
             <div class="detalhe-info">
+                <div class="detalhe-cabecalho">
+                    <h1>{{ produto.nome }}</h1>
+                    <p class="detalhe-preco">{{ produto.preco }}</p>
+                </div>
                 <span class="product-categoria">{{ produto.categoria }}</span>
-                <h1>{{ produto.nome }}</h1>
-                <p class="detalhe-preco">{{ produto.preco }}</p>
-                <div class="description"><p>{{ produto.descricao }}</p><p>Escolha conforto, qualidade e proteção para completar seu estilo. Consulte a disponibilidade de lentes e opções de ajuste.</p></div>
-                <div class="detalhe-acoes"><button class="add-to-cart" type="button" data-product-id="{{ produto.id }}"><i class="fa-solid fa-cart-shopping"></i> Adicionar ao carrinho</button><button class="favorite-button" type="button" aria-label="Favoritar {{ produto.nome }}" aria-pressed="false"><i class="fa-regular fa-heart"></i></button></div>
+                <div class="opcao-produto">
+                    <h2>Cor</h2><p class="opcao-selecao" data-selection-label="frame">Preto</p>
+                    <div class="amostras-cor" role="group" aria-label="Escolha a cor da armação">
+                        <button class="amostra-cor selecionado" type="button" aria-label="Preto" aria-pressed="true" data-choice="Preto" style="--swatch:#171717"></button>
+                        <button class="amostra-cor" type="button" aria-label="Tartaruga" aria-pressed="false" data-choice="Tartaruga" style="--swatch:linear-gradient(135deg,#321b13,#a65c20,#1d1010)"></button>
+                    </div>
+                </div>
+                <div class="opcao-produto">
+                    <h2>Cor da lente</h2><p class="opcao-selecao" data-selection-label="lens">Lente escura</p>
+                    <div class="amostras-cor" role="group" aria-label="Escolha a cor da lente">
+                        <button class="amostra-cor selecionado lente-escura" type="button" aria-label="Lente escura" aria-pressed="true" data-choice="Lente escura"></button>
+                        <button class="amostra-cor lente-marrom" type="button" aria-label="Lente marrom" aria-pressed="false" data-choice="Lente marrom"></button>
+                    </div>
+                </div>
+                <div class="detalhe-acoes">
+                    <button class="add-to-cart" type="button" data-product-id="{{ produto.id }}">Comprar óculos</button>
+                    <a class="botao-lente-grau" href="{{ url_for('contato') }}">Adicionar lente de grau</a>
+                </div>
+                <div class="product-tabs" role="tablist" aria-label="Informações do produto">
+                    <button class="product-tab ativo" id="tab-descricao" type="button" role="tab" aria-selected="true" aria-controls="painel-descricao" data-tab="descricao">Descrição</button>
+                    <button class="product-tab" id="tab-detalhes" type="button" role="tab" aria-selected="false" aria-controls="painel-detalhes" data-tab="detalhes">Detalhes</button>
+                    <button class="product-tab" id="tab-tamanho" type="button" role="tab" aria-selected="false" aria-controls="painel-tamanho" data-tab="tamanho">Tamanho</button>
+                </div>
+                <div class="product-tab-panel" id="painel-descricao" role="tabpanel" aria-labelledby="tab-descricao" data-tab-panel="descricao">
+                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+                </div>
+                <div class="product-tab-panel" id="painel-detalhes" role="tabpanel" aria-labelledby="tab-detalhes" data-tab-panel="detalhes" hidden>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+                </div>
+                <div class="product-tab-panel" id="painel-tamanho" role="tabpanel" aria-labelledby="tab-tamanho" data-tab-panel="tamanho" hidden>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</p>
+                </div>
+                <ul class="detalhe-beneficios">
+                    <li><i class="fa-regular fa-clock"></i> Consulte o prazo de entrega para seu endereço.</li>
+                    <li><i class="fa-solid fa-arrow-rotate-left"></i> Consulte as condições de troca e devolução.</li>
+                    <li><i class="fa-solid fa-truck"></i> Confira as opções de envio no atendimento.</li>
+                </ul>
             </div>
         </section>
-        <section class="relacionados"><h2>Você também pode gostar</h2><div class="lista-produtos">
+        <section class="relacionados" data-current-id="{{ produto.id }}" aria-label="Mais produtos">
+            <div class="related-tabs" role="tablist" aria-label="Produtos recomendados">
+                <button class="related-tab active" type="button" role="tab" aria-selected="true" aria-controls="produtos-semelhantes">Produtos Semelhantes</button>
+                <button class="related-tab" type="button" role="tab" aria-selected="false" aria-controls="vistos-recentemente">Vistos Recentemente</button>
+            </div>
+            <div class="related-panel active" id="produtos-semelhantes" role="tabpanel">
+                <div class="related-grid">
             {% for item in produtos if item.id != produto.id %}
-            <a class="related-card" href="{{ url_for('detalhe_produto', produto_id=item.id) }}"><img src="{{ item.imagem }}" alt="{{ item.nome }}"><h3>{{ item.nome }}</h3><p>{{ item.preco }}</p></a>
+                    <a class="related-card" href="{{ url_for('detalhe_produto', produto_id=item.id) }}">
+                        <div class="related-card-image"><img src="{{ item.imagem }}" alt="Óculos {{ item.nome }}" loading="lazy"></div>
+                        <div class="related-card-info"><h3>{{ item.nome }}</h3><p class="related-price">{{ item.preco }}</p></div>
+                        <p class="related-category">{{ item.categoria }}</p>
+                    </a>
             {% endfor %}
-        </div></section>
+                </div>
+            </div>
+            <div class="related-panel" id="vistos-recentemente" role="tabpanel" hidden><div class="related-grid"></div></div>
+        </section>
     </main>
+    <section class="produto-faq" aria-labelledby="produto-faq-titulo">
+        <div class="produto-faq-visual">
+            <img src="https://picsum.photos/seed/Visão Boa-boa-faq/1000/1200" alt="Imagem ilustrativa da Visão Boa" loading="lazy">
+        </div>
+        <div class="produto-faq-conteudo">
+            <h2 id="produto-faq-titulo">Perguntas Frequentes</h2>
+            <div class="central-ajuda-lista">
+                <article class="central-ajuda-item">
+                    <button class="central-ajuda-pergunta" type="button" aria-expanded="false" aria-controls="produto-resposta-entrega">
+                        <span>Qual o prazo de produção e envio dos óculos?</span><i class="fa-solid fa-chevron-down" aria-hidden="true"></i>
+                    </button>
+                    <div class="central-ajuda-resposta" id="produto-resposta-entrega" aria-hidden="true"><p>Pedidos sem lentes de grau, realizados até 12h (de segunda a sexta, dias úteis), são postados no mesmo dia. Após esse horário, a postagem ocorre no próximo dia útil. Pedidos com lentes de grau podem exigir prazo adicional, conforme o tipo de lente e a modalidade escolhida.</p></div>
+                </article>
+                <article class="central-ajuda-item">
+                    <button class="central-ajuda-pergunta" type="button" aria-expanded="false" aria-controls="produto-resposta-seguranca">
+                        <span>É seguro comprar óculos online na Visão Boa?</span><i class="fa-solid fa-chevron-down" aria-hidden="true"></i>
+                    </button>
+                    <div class="central-ajuda-resposta" id="produto-resposta-seguranca" aria-hidden="true"><p>Sim. Você pode conferir os detalhes do modelo e as condições da compra antes de finalizar. Se precisar de ajuda para escolher seus óculos, <a href="{{ url_for('contato') }}">fale com a gente</a>.</p></div>
+                </article>
+                <article class="central-ajuda-item">
+                    <button class="central-ajuda-pergunta" type="button" aria-expanded="false" aria-controls="produto-resposta-qualidade">
+                        <span>Por que a Visão Boa tem preço e qualidade imbatíveis?</span><i class="fa-solid fa-chevron-down" aria-hidden="true"></i>
+                    </button>
+                    <div class="central-ajuda-resposta" id="produto-resposta-qualidade" aria-hidden="true"><p>Somos uma ótica online e trabalhamos com marca própria, aproximando você dos fabricantes. Assim, investimos na qualidade dos produtos e no atendimento.</p></div>
+                </article>
+            </div>
+            <a class="produto-faq-link" href="{{ url_for('faq') }}">Visite a Central de Ajuda para ver mais</a>
+        </div>
+    </section>
+    {% include 'partials/aviso-login.html' %}
     <div id="overlay" class="overlay" onclick="fecharCarrinho()"></div>
     <aside id="carrinho" class="carrinho" aria-label="Meu carrinho" aria-hidden="true"><div class="carrinho-header"><h2>Meu carrinho</h2><button type="button" onclick="fecharCarrinho()" class="fechar" aria-label="Fechar carrinho"><i class="fa-solid fa-xmark"></i></button></div><div class="produtos"></div><div class="carrinho-footer"><div class="total"><span>Total:</span><strong>R$ 0,00</strong></div><button type="button" class="finalizar">Finalizar compra</button></div></aside>
-    <script src="{{ url_for('static', filename='js/loja.js') }}"></script>
+    {% include 'partials/rodape.html' %}
+    <script type="application/json" id="catalogo-produtos">{{ produtos|tojson }}</script>
+    <script src="/js/loja.js?v=product-gallery-2"></script>
+    <script src="/js/centralajuda.js?v=produto-faq-1"></script>
 </body>
 </html>

@@ -4,18 +4,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Óculos</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="/css/style.css?v=cart-drawer-2">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
 </head>
 <body>
-    <nav>
-        <p class="estilo">Escolha Seu Estilo</p>
-        <h1 class="titulo">Visao Boa</h1>
-        <p class="descricao">Encontre o par ideal para você!</p>
+    <nav class="hero-head" id="topo">
+        <h1 class="titulo">Visão Boa Boa</h1>
     </nav>
     <nav class="menu flex-nav">
         <button class="toggle-nav" type="button" aria-label="Abrir menu" aria-expanded="false"><i class="fa-solid fa-bars"></i></button>
         <ul class="menu-links" id="menuLinks">
+            <li class="menu-drawer-close"><button class="menu-close" type="button" aria-label="Fechar menu"><i class="fa-solid fa-xmark" aria-hidden="true"></i></button></li>
             <li><a href="#">Óculos de Sol</a></li>
             <li><a href="#">Óculos de Grau</a></li>
             <li><a href="#">Óculos Esportivos</a></li>
@@ -35,12 +34,15 @@
             </button>
         </div>
     </nav>
-    <main class="catalogo" id="catalogo">
-        <h2 class="catalogo-titulo">Nossos óculos</h2>
+    <main class="catalogo catalogo-home" id="catalogo">
+        <div class="catalogo-tabs" role="group" aria-label="Ordenar produtos">
+            <button class="catalogo-tab active" type="button" aria-pressed="true" data-sort="novidades">Novidades</button>
+            <button class="catalogo-tab" type="button" aria-pressed="false" data-sort="mais-vendidos">Mais vendidos</button>
+        </div>
         <section class="lista-produtos" aria-label="Produtos disponíveis">
-            <article class="product-card">
+            <article class="product-card" data-product-id="1">
                 <span class="badge">Destaque</span>
-                <div class="product-tumb"><img src="https://images.unsplash.com/photo-1511499767150-a48a237f0083?auto=format&fit=crop&w=800&q=80" alt="Óculos de sol preto"></div>
+                <div class="product-tumb"><img src="https://images.unsplash.com/photo-1511499767150-a48a237f0083?auto=format&fit=crop&w=1000&q=80" alt="Óculos Solar clássico" loading="lazy"></div>
                 <div class="product-details">
                     <span class="product-categoria">Óculos de sol</span>
                     <h3>Solar clássico</h3>
@@ -48,8 +50,8 @@
                     <div class="product-bottom-details"><span class="product-price"><small>R$ 249,90</small>R$ 189,90</span><a class="product-cart" href="#" aria-label="Adicionar Solar clássico ao carrinho"><i class="fa-solid fa-cart-shopping"></i></a></div>
                 </div>
             </article>
-            <article class="product-card">
-                <div class="product-tumb"><img src="https://images.unsplash.com/photo-1574258495973-f010dfbb5371?auto=format&fit=crop&w=800&q=80" alt="Óculos de armação transparente"></div>
+            <article class="product-card" data-product-id="2">
+                <div class="product-tumb"><img src="https://images.unsplash.com/photo-1574258495973-f010dfbb5371?auto=format&fit=crop&w=1000&q=80" alt="Óculos Transparência urbana" loading="lazy"></div>
                 <div class="product-details">
                     <span class="product-categoria">Óculos de grau</span>
                     <h3>Transparência urbana</h3>
@@ -57,9 +59,9 @@
                     <div class="product-bottom-details"><span class="product-price">R$ 219,90</span><a class="product-cart" href="#" aria-label="Adicionar Transparência urbana ao carrinho"><i class="fa-solid fa-cart-shopping"></i></a></div>
                 </div>
             </article>
-            <article class="product-card">
+            <article class="product-card" data-product-id="3">
                 <span class="badge">Novo</span>
-                <div class="product-tumb"><img src="https://images.unsplash.com/photo-1572635196237-14b3f281503f?auto=format&fit=crop&w=800&q=80" alt="Óculos de sol com armação marrom"></div>
+                <div class="product-tumb"><img src="https://images.unsplash.com/photo-1572635196237-14b3f281503f?auto=format&fit=crop&w=1000&q=80" alt="Óculos Marrom retrô" loading="lazy"></div>
                 <div class="product-details">
                     <span class="product-categoria">Óculos de sol</span>
                     <h3>Marrom retrô</h3>
@@ -67,8 +69,8 @@
                     <div class="product-bottom-details"><span class="product-price">R$ 199,90</span><a class="product-cart" href="#" aria-label="Adicionar Marrom retrô ao carrinho"><i class="fa-solid fa-cart-shopping"></i></a></div>
                 </div>
             </article>
-            <article class="product-card">
-                <div class="product-tumb"><img src="https://images.unsplash.com/photo-1508296695146-257a814070b4?auto=format&fit=crop&w=800&q=80" alt="Óculos de sol estilo aviador"></div>
+            <article class="product-card" data-product-id="4">
+                <div class="product-tumb"><img src="https://images.unsplash.com/photo-1508296695146-257a814070b4?auto=format&fit=crop&w=1000&q=80" alt="Óculos Aviador dourado" loading="lazy"></div>
                 <div class="product-details">
                     <span class="product-categoria">Óculos de sol</span>
                     <h3>Aviador dourado</h3>
@@ -76,8 +78,8 @@
                     <div class="product-bottom-details"><span class="product-price"><small>R$ 279,90</small>R$ 229,90</span><a class="product-cart" href="#" aria-label="Adicionar Aviador dourado ao carrinho"><i class="fa-solid fa-cart-shopping"></i></a></div>
                 </div>
             </article>
-            <article class="product-card">
-                <div class="product-tumb"><img src="https://images.unsplash.com/photo-1614715838608-dd527c46231d?auto=format&fit=crop&w=800&q=80" alt="Óculos esportivo"></div>
+            <article class="product-card" data-product-id="5">
+                <div class="product-tumb"><img src="https://images.unsplash.com/photo-1614715838608-dd527c46231d?auto=format&fit=crop&w=1000&q=80" alt="Óculos Sport movimento" loading="lazy"></div>
                 <div class="product-details">
                     <span class="product-categoria">Esportivo</span>
                     <h3>Sport movimento</h3>
@@ -85,8 +87,8 @@
                     <div class="product-bottom-details"><span class="product-price">R$ 259,90</span><a class="product-cart" href="#" aria-label="Adicionar Sport movimento ao carrinho"><i class="fa-solid fa-cart-shopping"></i></a></div>
                 </div>
             </article>
-            <article class="product-card">
-                <div class="product-tumb"><img src="https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=800&q=80" alt="Pessoa usando óculos de grau"></div>
+            <article class="product-card" data-product-id="6">
+                <div class="product-tumb"><img src="https://images.unsplash.com/photo-1574258495973-f010dfbb5371?auto=format&fit=crop&w=1000&q=80" alt="Óculos Essencial redondo" loading="lazy"></div>
                 <div class="product-details">
                     <span class="product-categoria">Óculos de grau</span>
                     <h3>Essencial redondo</h3>
@@ -96,6 +98,7 @@
             </article>
         </section>
     </main>
+    {% include 'partials/aviso-login.html' %}
     <div id="overlay" class="overlay" onclick="fecharCarrinho()"></div>
     <aside id="carrinho" class="carrinho" aria-label="Meu Carrinho" aria-hidden="true">
         <div class="carrinho-header">
@@ -104,18 +107,17 @@
         </div>
         <div class="produtos">
             <div class="produto">
-                <img src="https://via.placeholder.com/70" alt="Óculos de Sol">
                 <div class="produto-info"><h3>Óculos de Sol</h3><p>R$ 29,90</p><div class="quantidade"><button type="button">−</button><span>1</span><button type="button">+</button></div></div>
                 <button type="button" class="remover" aria-label="Remover Óculos de Sol"><i class="fa-solid fa-trash"></i></button>
             </div>
             <div class="produto">
-                <img src="https://via.placeholder.com/70" alt="Óculos de Grau">
                 <div class="produto-info"><h3>Óculos de Grau</h3><p>R$ 49,90</p><div class="quantidade"><button type="button">−</button><span>1</span><button type="button">+</button></div></div>
                 <button type="button" class="remover" aria-label="Remover Óculos de Grau"><i class="fa-solid fa-trash"></i></button>
             </div>
         </div>
         <div class="carrinho-footer"><div class="total"><span>Total:</span><strong>R$ 79,80</strong></div><button type="button" class="finalizar">Finalizar compra</button></div>
-    </aside>
-    <script src="{{ url_for('static', filename='js/loja.js') }}"></script>
+</aside>
+    {% include 'partials/rodape.html' %}
+    <script src="/js/loja.js?v=auth-gate-1"></script>
 </body>
 </html>

@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Central de Ajuda | Visão Boa</title>
+    <link rel="stylesheet" href="/css/style.css?v=footer-mobile-1">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+</head>
+<body>
+    <header class="site-header central-ajuda-header">
+        <a class="brand" href="{{ url_for('inicio') }}">Visão Boa</a>
+    </header>
+    <main class="central-ajuda">
+        <section class="central-ajuda-visual" aria-label="Atendimento Visão Boa">
+            <img src="https://picsum.photos/seed/Visão Boa-boa-ajuda/1000/1200" alt="Imagem ilustrativa da Central de Ajuda" loading="lazy">
+        </section>
+        <section class="central-ajuda-faq" aria-labelledby="central-ajuda-titulo">
+            <h2 id="central-ajuda-titulo">Perguntas Frequentes</h2>
+            <div class="central-ajuda-lista">
+                <article class="central-ajuda-item" id="faq-entrega">
+                    <button class="central-ajuda-pergunta" type="button" aria-expanded="false" aria-controls="resposta-entrega">
+                        <span>Qual o prazo de produção e envio dos óculos?</span><i class="fa-solid fa-chevron-down" aria-hidden="true"></i>
+                    </button>
+                    <div class="central-ajuda-resposta" id="resposta-entrega" aria-hidden="true"><p>O prazo pode variar conforme o produto e o endereço de entrega. Entre em contato conosco para confirmar a previsão antes de comprar.</p></div>
+                </article>
+                <article class="central-ajuda-item">
+                    <button class="central-ajuda-pergunta" type="button" aria-expanded="false" aria-controls="resposta-compra">
+                        <span>É seguro comprar óculos online na Visão Boa?</span><i class="fa-solid fa-chevron-down" aria-hidden="true"></i>
+                    </button>
+                    <div class="central-ajuda-resposta" id="resposta-compra" aria-hidden="true"><p>Confira os detalhes do produto e as condições da compra. Se tiver alguma dúvida sobre pagamento ou pedido, fale com nosso atendimento antes de concluir.</p></div>
+                </article>
+                <article class="central-ajuda-item" id="faq-modelo">
+                    <button class="central-ajuda-pergunta" type="button" aria-expanded="true" aria-controls="resposta-modelo">
+                        <span>Como escolher óculos com qualidade e bom custo-benefício?</span><i class="fa-solid fa-chevron-down" aria-hidden="true"></i>
+                    </button>
+                    <div class="central-ajuda-resposta aberta" id="resposta-modelo" aria-hidden="false" style="max-height:none"><p>Confira os materiais e as informações de cada modelo. Para confirmar se ele atende à sua necessidade ou receita, <a href="{{ url_for('contato') }}">fale com a gente</a>.</p></div>
+                </article>
+                <article class="central-ajuda-item" id="faq-uv">
+                    <button class="central-ajuda-pergunta" type="button" aria-expanded="false" aria-controls="resposta-uv">
+                        <span>Como sei se os óculos de sol têm proteção UV?</span><i class="fa-solid fa-chevron-down" aria-hidden="true"></i>
+                    </button>
+                    <div class="central-ajuda-resposta" id="resposta-uv" aria-hidden="true"><p>Confira as informações disponíveis na página do produto. Se a proteção não estiver descrita, confirme com o atendimento antes de comprar.</p></div>
+                </article>
+                <article class="central-ajuda-item" id="faq-trocas">
+                    <button class="central-ajuda-pergunta" type="button" aria-expanded="false" aria-controls="resposta-trocas">
+                        <span>Como funcionam trocas, devoluções e garantia?</span><i class="fa-solid fa-chevron-down" aria-hidden="true"></i>
+                    </button>
+                    <div class="central-ajuda-resposta" id="resposta-trocas" aria-hidden="true"><p>Consulte nossa equipe para confirmar as condições aplicáveis ao seu pedido. <a href="{{ url_for('contato') }}">Entre em contato</a> antes de comprar se precisar esclarecer algo.</p></div>
+                </article>
+                <article>
+                    <button class="central-ajuda-pergunta" type="button" aria-expanded="false" aria-controls="resposta-limpeza">
+                        <span>Como posso limpar as lentes?</span><i class="fa-solid fa-chevron-down" aria-hidden="true"></i>
+                    </button>
+                    <div class="central-ajuda-resposta" id="resposta-limpeza" aria-hidden="true"><p>Use um pano de microfibra limpo e evite produtos abrasivos para ajudar a conservar as lentes.</p></div>
+                </article>
+                <article id="faq-pagamento">
+                    <button class="central-ajuda-pergunta" type="button" aria-expanded="false" aria-controls="resposta-pagamento">
+                        <span>Quais são as formas de pagamento?</span><i class="fa-solid fa-chevron-down" aria-hidden="true"></i>
+                    </button>
+                    <div class="central-ajuda-resposta" id="resposta-pagamento" aria-hidden="true"><p>As opções disponíveis aparecem durante a compra. Se precisar confirmar uma forma de pagamento, fale com nosso atendimento.</p></div>
+                </article>
+            </div>
+        </section>
+    </main>
+    {% include 'partials/rodape.html' %}
+    <script src="/js/centralajuda.js?v=central-ajuda-2"></script>
+</body>
+</html>

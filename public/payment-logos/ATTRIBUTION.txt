@@ -1,0 +1,6 @@
+Payment brand logo assets in this folder are a subset of payment-logos:
+https://github.com/datatrans/payment-logos
+
+The source archive provides these assets under the Creative Commons
+Attribution-ShareAlike 4.0 International license. See LICENSE in this folder.
+The files were copied from assets/cards and are otherwise unmodified.

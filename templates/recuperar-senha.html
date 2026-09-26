@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recuperar senha | Visão Boa</title>
+    <link rel="stylesheet" href="/css/style.css?v=footer-mobile-1">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+</head>
+<body>
+    <header class="site-header"><a class="brand" href="{{ url_for('inicio') }}">Visão Boa</a></header>
+    <main class="auth-page">
+        <section class="auth-card" aria-labelledby="recuperar-titulo">
+            <a class="auth-back" href="{{ url_for('login') }}"><i class="fa-solid fa-arrow-left" aria-hidden="true"></i> Voltar para o login</a>
+            <h1 id="recuperar-titulo">Recuperar senha</h1>
+            <p class="auth-intro">Informe o e-mail da sua conta para receber as instruções de recuperação.</p>
+            {% if aviso %}<p class="auth-feedback" role="status">{{ aviso }}</p>{% endif %}
+            <form class="auth-form" method="post" action="{{ url_for('recuperar_senha') }}">
+                <label for="recuperar-email">E-mail</label>
+                <input id="recuperar-email" type="email" name="email" placeholder="voce@email.com" autocomplete="email" required>
+                <button class="auth-submit" type="submit">Enviar instruções <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></button>
+            </form>
+            <p class="auth-signup">Lembrou sua senha? <a href="{{ url_for('login') }}">Entrar</a></p>
+        </section>
+    </main>
+    {% include 'partials/rodape.html' %}
+</body>
+</html>

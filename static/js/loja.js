@@ -6,12 +6,64 @@ const lerStorage = (chave, padrao) => {
 let carrinho = lerStorage("oculos-carrinho", []);
 let favoritos = lerStorage("oculos-favoritos", []);
 
+const menuDrawerOverlay = document.createElement("div");
+menuDrawerOverlay.className = "menu-overlay";
+menuDrawerOverlay.setAttribute("aria-hidden", "true");
+document.body.append(menuDrawerOverlay);
+
+function fecharMenuLateral() {
+    document.querySelectorAll(".toggle-nav").forEach(botao => {
+        const menu = botao.parentElement.querySelector(".menu-links");
+        menu?.classList.remove("active");
+        botao.setAttribute("aria-expanded", "false");
+        botao.setAttribute("aria-label", "Abrir menu");
+    });
+    menuDrawerOverlay.classList.remove("active");
+    menuDrawerOverlay.setAttribute("aria-hidden", "true");
+    document.body.classList.remove("menu-lateral-aberto");
+}
+
 document.querySelectorAll(".toggle-nav").forEach(botao => {
-    const links = botao.parentElement.querySelector(".menu-links");
+    const menu = botao.parentElement.querySelector(".menu-links");
+    const fechar = menu?.querySelector(".menu-close");
     botao.addEventListener("click", () => {
-        const aberto = links.classList.toggle("active");
-        botao.setAttribute("aria-expanded", String(aberto));
-        botao.setAttribute("aria-label", aberto ? "Fechar menu" : "Abrir menu");
+        const aberto = !menu?.classList.contains("active");
+        fecharMenuLateral();
+        if (!aberto || !menu) return;
+        menu.classList.add("active");
+        botao.setAttribute("aria-expanded", "true");
+        botao.setAttribute("aria-label", "Fechar menu");
+        menuDrawerOverlay.classList.add("active");
+        menuDrawerOverlay.setAttribute("aria-hidden", "false");
+        document.body.classList.add("menu-lateral-aberto");
+        fechar?.focus();
+    });
+    fechar?.addEventListener("click", fecharMenuLateral);
+    menu?.querySelectorAll("a").forEach(link => link.addEventListener("click", fecharMenuLateral));
+});
+menuDrawerOverlay.addEventListener("click", fecharMenuLateral);
+
+document.querySelectorAll(".menu-links").forEach(menu => {
+    const linha = document.createElement("span");
+    linha.className = "menu-underline";
+    linha.setAttribute("aria-hidden", "true");
+    menu.append(linha);
+
+    const moverLinha = link => {
+        const menuRect = menu.getBoundingClientRect();
+        const linkRect = link.getBoundingClientRect();
+        linha.style.width = `${linkRect.width}px`;
+        linha.style.transform = `translateX(${linkRect.left - menuRect.left}px)`;
+        linha.style.opacity = "1";
+    };
+
+    menu.querySelectorAll("a").forEach(link => {
+        link.addEventListener("pointerenter", () => moverLinha(link));
+        link.addEventListener("focus", () => moverLinha(link));
+    });
+    menu.addEventListener("pointerleave", () => { linha.style.opacity = "0"; });
+    menu.addEventListener("focusout", event => {
+        if (!menu.contains(event.relatedTarget)) linha.style.opacity = "0";
     });
 });
 
@@ -29,7 +81,6 @@ function renderizarCarrinho() {
     if (contador) contador.textContent = quantidade;
     lista.innerHTML = carrinho.length ? carrinho.map(item => `
         <div class="produto" data-id="${item.id}">
-            <img src="${item.imagem}" alt="${item.nome}">
             <div class="produto-info"><h3>${item.nome}</h3><p>${item.preco}</p>
                 <div class="quantidade"><button type="button" data-action="menos" aria-label="Diminuir quantidade">−</button><span>${item.quantidade}</span><button type="button" data-action="mais" aria-label="Aumentar quantidade">+</button></div>
             </div><button type="button" class="remover" data-action="remover" aria-label="Remover ${item.nome}"><i class="fa-solid fa-trash"></i></button>
@@ -42,12 +93,39 @@ function abrirCarrinho() {
     document.getElementById("carrinho")?.classList.add("active");
     document.getElementById("overlay")?.classList.add("active");
     document.getElementById("carrinho")?.setAttribute("aria-hidden", "false");
+    document.body.classList.add("carrinho-aberto");
 }
+
+function abrirAvisoLogin(motivo = "checkout") {
+    const aviso = document.getElementById("loginGate");
+    if (!aviso) return;
+    const rotulo = motivo === "favoritos" ? "favoritos" : "checkout";
+    aviso.hidden = false;
+    document.body.classList.add("login-gate-aberto");
+    const entrar = document.getElementById("loginGateEnter");
+    const criar = document.getElementById("loginGateCreate");
+    if (entrar) entrar.href = `/login?next=${rotulo}`;
+    if (criar) criar.href = `/criar-conta?next=${rotulo}`;
+    document.getElementById("login-gate-title")?.replaceChildren(document.createTextNode(rotulo === "favoritos" ? "Salve seus favoritos" : "Entre na sua conta"));
+    document.getElementById("login-gate-description")?.replaceChildren(document.createTextNode(rotulo === "favoritos" ? "Entre ou crie uma conta para guardar seus óculos favoritos." : "Para finalizar sua compra, entre ou crie uma conta Visão Boa."));
+    entrar?.focus();
+}
+
+function fecharAvisoLogin() {
+    const aviso = document.getElementById("loginGate");
+    if (!aviso || aviso.hidden) return;
+    aviso.hidden = true;
+    document.body.classList.remove("login-gate-aberto");
+}
+
+document.querySelectorAll("[data-close-login-gate]").forEach(botao => botao.addEventListener("click", fecharAvisoLogin));
+document.querySelectorAll(".finalizar").forEach(botao => botao.addEventListener("click", () => abrirAvisoLogin("checkout")));
 
 function fecharCarrinho() {
     document.getElementById("carrinho")?.classList.remove("active");
     document.getElementById("overlay")?.classList.remove("active");
     document.getElementById("carrinho")?.setAttribute("aria-hidden", "true");
+    document.body.classList.remove("carrinho-aberto");
 }
 
 function abrirPesquisa() {
@@ -76,7 +154,7 @@ function dadosDoProduto(id, card) {
 }
 
 document.querySelectorAll(".product-card").forEach((card, index) => {
-    const id = String(index + 1);
+    const id = String(card.dataset.productId || index + 1);
     card.dataset.productId = id;
     card.tabIndex = 0;
     card.setAttribute("role", "group");
@@ -93,10 +171,8 @@ document.querySelectorAll(".product-card").forEach((card, index) => {
     const botaoFavorito = card.querySelector(".favorite-button");
     botaoFavorito?.addEventListener("click", event => {
         event.stopPropagation();
-        const ativo = favoritos.includes(id);
-        favoritos = ativo ? favoritos.filter(item => item !== id) : [...favoritos, id];
-        localStorage.setItem("oculos-favoritos", JSON.stringify(favoritos));
-        atualizarCoracao(botaoFavorito, !ativo);
+        event.preventDefault();
+        abrirAvisoLogin("favoritos");
     });
     if (botaoFavorito) atualizarCoracao(botaoFavorito, favoritos.includes(id));
 
@@ -115,6 +191,56 @@ document.querySelectorAll(".product-card").forEach((card, index) => {
         }
     });
 });
+
+const miniaturasProduto = [...document.querySelectorAll(".detalhe-miniatura")];
+miniaturasProduto.forEach((miniatura, index) => {
+    miniatura.addEventListener("click", () => {
+        const imagemPrincipal = document.getElementById("imagem-principal-produto");
+        if (!imagemPrincipal || !miniatura.dataset.image) return;
+        const requisicao = Number(imagemPrincipal.dataset.troca || 0) + 1;
+        imagemPrincipal.dataset.troca = String(requisicao);
+        const novaImagem = new Image();
+        novaImagem.onload = () => {
+            if (Number(imagemPrincipal.dataset.troca) !== requisicao) return;
+            imagemPrincipal.classList.add("trocando");
+            window.setTimeout(() => {
+                if (Number(imagemPrincipal.dataset.troca) !== requisicao) return;
+                imagemPrincipal.src = novaImagem.src;
+                requestAnimationFrame(() => imagemPrincipal.classList.remove("trocando"));
+            }, 320);
+        };
+        novaImagem.onerror = () => imagemPrincipal.classList.remove("trocando");
+        novaImagem.src = miniatura.dataset.image;
+        miniaturasProduto.forEach(item => {
+            const ativa = item === miniatura;
+            item.classList.toggle("ativa", ativa);
+            item.setAttribute("aria-pressed", String(ativa));
+        });
+        const legenda = document.querySelector(".detalhe-foto-legenda");
+        if (legenda) {
+            legenda.textContent = `Foto ${index + 1} de ${miniaturasProduto.length}`;
+            legenda.classList.remove("atualizada");
+            void legenda.offsetWidth;
+            legenda.classList.add("atualizada");
+        }
+    });
+});
+
+const listaHome = document.querySelector(".catalogo-home .lista-produtos");
+if (listaHome) {
+    const ordemNovidades = [1, 2, 3, 4, 5, 6];
+    const ordemMaisVendidos = [1, 4, 3, 2, 6, 5];
+    document.querySelectorAll(".catalogo-tab").forEach(tab => tab.addEventListener("click", () => {
+        document.querySelectorAll(".catalogo-tab").forEach(item => {
+            const ativa = item === tab;
+            item.classList.toggle("active", ativa);
+            item.setAttribute("aria-pressed", String(ativa));
+        });
+        const ordem = tab.dataset.sort === "mais-vendidos" ? ordemMaisVendidos : ordemNovidades;
+        const cardsPorId = new Map([...listaHome.querySelectorAll(".product-card")].map(card => [Number(card.dataset.productId), card]));
+        ordem.forEach(id => { const card = cardsPorId.get(id); if (card) listaHome.append(card); });
+    }));
+}
 
 function atualizarCoracao(botao, ativo) {
     const icone = botao.querySelector("i");
@@ -159,5 +285,100 @@ document.getElementById("searchBox")?.addEventListener("input", event => {
     });
 });
 
-document.addEventListener("keydown", event => { if (event.key === "Escape") fecharCarrinho(); });
+document.querySelectorAll(".opcao-produto").forEach(opcao => {
+    const label = opcao.querySelector("[data-selection-label]");
+    opcao.querySelectorAll(".amostra-cor").forEach(amostra => {
+        amostra.addEventListener("click", () => {
+            opcao.querySelectorAll(".amostra-cor").forEach(item => {
+                const selecionado = item === amostra;
+                item.classList.toggle("selecionado", selecionado);
+                item.setAttribute("aria-pressed", String(selecionado));
+            });
+            if (label) label.textContent = amostra.dataset.choice;
+        });
+    });
+});
+
+document.querySelectorAll(".product-tabs").forEach(tabs => {
+    tabs.querySelectorAll(".product-tab").forEach(tab => {
+        tab.addEventListener("click", () => {
+            tabs.querySelectorAll(".product-tab").forEach(item => {
+                const ativo = item === tab;
+                item.classList.toggle("ativo", ativo);
+                item.setAttribute("aria-selected", String(ativo));
+            });
+            document.querySelectorAll("[data-tab-panel]").forEach(painel => {
+                painel.hidden = painel.dataset.tabPanel !== tab.dataset.tab;
+            });
+        });
+    });
+});
+
+const relatedSection = document.querySelector(".relacionados");
+if (relatedSection) {
+    const relatedTabs = [...relatedSection.querySelectorAll(".related-tab")];
+    const panels = [...relatedSection.querySelectorAll(".related-panel")];
+    relatedTabs.forEach(tab => tab.addEventListener("click", () => {
+        relatedTabs.forEach(item => {
+            const active = item === tab;
+            item.classList.toggle("active", active);
+            item.setAttribute("aria-selected", String(active));
+        });
+        panels.forEach(panel => { panel.hidden = panel.id !== tab.getAttribute("aria-controls"); });
+    }));
+
+    const catalogo = lerStorage("oculos-catalogo", []);
+    const produtoAtual = relatedSection.dataset.currentId;
+    const vistos = lerStorage("oculos-vistos-recentemente", []).filter(id => String(id) !== produtoAtual);
+    const idsVistos = [produtoAtual, ...vistos].filter((id, index, todos) => todos.indexOf(id) === index).slice(0, 8);
+    localStorage.setItem("oculos-vistos-recentemente", JSON.stringify(idsVistos));
+    const catalogoScript = document.getElementById("catalogo-produtos");
+    let produtosDisponiveis = [];
+    try { produtosDisponiveis = JSON.parse(catalogoScript?.textContent || "[]"); } catch { produtosDisponiveis = []; }
+    localStorage.setItem("oculos-catalogo", JSON.stringify(produtosDisponiveis));
+
+    const gradeRecentes = relatedSection.querySelector("#vistos-recentemente .related-grid");
+    const criarCard = produto => {
+        const link = document.createElement("a");
+        link.className = "related-card";
+        link.href = `/produto/${encodeURIComponent(produto.id)}`;
+        const imagemWrap = document.createElement("div");
+        imagemWrap.className = "related-card-image";
+        const imagem = document.createElement("img");
+        imagem.src = produto.imagem;
+        imagem.alt = `Óculos ${produto.nome}`;
+        imagem.loading = "lazy";
+        imagemWrap.append(imagem);
+        const info = document.createElement("div");
+        info.className = "related-card-info";
+        const nome = document.createElement("h3");
+        nome.textContent = produto.nome;
+        const preco = document.createElement("p");
+        preco.className = "related-price";
+        preco.textContent = produto.preco;
+        info.append(nome, preco);
+        const categoria = document.createElement("p");
+        categoria.className = "related-category";
+        categoria.textContent = produto.categoria;
+        link.append(imagemWrap, info, categoria);
+        return link;
+    };
+    const catalogoCompleto = produtosDisponiveis.length ? produtosDisponiveis : catalogo;
+    const produtosRecentes = idsVistos.map(id => catalogoCompleto.find(item => String(item.id) === String(id))).filter(Boolean);
+    if (gradeRecentes && produtosRecentes.length) gradeRecentes.append(...produtosRecentes.map(criarCard));
+    else if (gradeRecentes) {
+        const vazio = document.createElement("p");
+        vazio.className = "related-empty";
+        vazio.textContent = "Os produtos que você visitar aparecerão aqui.";
+        gradeRecentes.append(vazio);
+    }
+}
+
+document.addEventListener("keydown", event => {
+    if (event.key === "Escape") {
+        fecharMenuLateral();
+        fecharAvisoLogin();
+        fecharCarrinho();
+    }
+});
 renderizarCarrinho();

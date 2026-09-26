@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Criar conta | Visão Boa</title>
+    <link rel="stylesheet" href="/css/style.css?v=footer-mobile-1">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+</head>
+<body>
+    <header class="site-header"><a class="brand" href="{{ url_for('inicio') }}">Visão Boa</a></header>
+    <main class="auth-page">
+        <section class="auth-card" aria-labelledby="criar-conta-titulo">
+            <a class="auth-back" href="{{ url_for('login') }}"><i class="fa-solid fa-arrow-left" aria-hidden="true"></i> Voltar para o login</a>
+            <h1 id="criar-conta-titulo">Crie sua conta</h1>
+            <p class="auth-intro">Tenha seus pedidos e dados sempre à mão.</p>
+            {% if aviso %}<p class="auth-feedback" role="status">{{ aviso }}</p>{% endif %}
+            <form class="auth-form" method="post" action="{{ url_for('criar_conta') }}">
+                <label for="cadastro-nome">Nome completo</label>
+                <input id="cadastro-nome" type="text" name="nome" placeholder="Seu nome" autocomplete="name" required>
+                <label for="cadastro-email">E-mail</label>
+                <input id="cadastro-email" type="email" name="email" placeholder="voce@email.com" autocomplete="email" required>
+                <label for="cadastro-senha">Crie uma senha</label>
+                <input id="cadastro-senha" type="password" name="senha" placeholder="Pelo menos 8 caracteres" minlength="8" autocomplete="new-password" required>
+                <button class="auth-submit" type="submit">Criar conta <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></button>
+            </form>
+            <p class="auth-signup">Já tem uma conta? <a href="{{ url_for('login') }}">Entrar</a></p>
+        </section>
+    </main>
+    {% include 'partials/rodape.html' %}
+</body>
+</html>

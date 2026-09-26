@@ -1,12 +1,32 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
-    <link rel="stylesheet" href="css/style.css">
+    <title>Entrar | Visão Boa</title>
+    <link rel="stylesheet" href="/css/style.css?v=footer-mobile-1">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
 </head>
 <body>
-    
+    <header class="site-header"><a class="brand" href="{{ url_for('inicio') }}">Visão Boa</a></header>
+    <main class="auth-page">
+        <section class="auth-card" aria-labelledby="login-titulo">
+            <a class="auth-back" href="{{ url_for('inicio') }}"><i class="fa-solid fa-arrow-left" aria-hidden="true"></i> Voltar para a loja</a>
+            {% if next == 'checkout' %}<p class="auth-notice"><i class="fa-solid fa-lock" aria-hidden="true"></i> Para finalizar sua compra, entre na sua conta ou crie uma.</p>{% elif next == 'favoritos' %}<p class="auth-notice"><i class="fa-solid fa-lock" aria-hidden="true"></i> Entre na sua conta para salvar seus favoritos.</p>{% endif %}
+            <h1 id="login-titulo">Bem-vindo de volta</h1>
+            <p class="auth-intro">Entre com seus dados para continuar.</p>
+            {% if aviso %}<p class="auth-feedback" role="status">{{ aviso }}</p>{% endif %}
+            <form class="auth-form" method="post" action="{{ url_for('login') }}">
+                <input type="hidden" name="next" value="{{ next }}">
+                <label for="login-email">E-mail</label>
+                <input id="login-email" type="email" name="email" placeholder="voce@email.com" autocomplete="email" required>
+                <div class="auth-label-row"><label for="login-senha">Senha</label><a href="{{ url_for('recuperar_senha') }}">Esqueci minha senha</a></div>
+                <input id="login-senha" type="password" name="senha" placeholder="Digite sua senha" autocomplete="current-password" required>
+                <button class="auth-submit" type="submit">Entrar <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></button>
+            </form>
+            <p class="auth-signup">Ainda não tem uma conta? <a href="{{ url_for('criar_conta') }}">Criar conta</a></p>
+        </section>
+    </main>
+    {% include 'partials/rodape.html' %}
 </body>
 </html>

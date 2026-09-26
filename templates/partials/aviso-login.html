@@ -1,0 +1,14 @@
+<div class="login-gate" id="loginGate" hidden>
+    <div class="login-gate-backdrop" data-close-login-gate></div>
+    <section class="login-gate-card" role="dialog" aria-modal="true" aria-labelledby="login-gate-title" aria-describedby="login-gate-description">
+        <button class="login-gate-close" type="button" aria-label="Fechar aviso" data-close-login-gate><i class="fa-solid fa-xmark" aria-hidden="true"></i></button>
+        <span class="login-gate-icon"><i class="fa-solid fa-lock" aria-hidden="true"></i></span>
+        <h2 id="login-gate-title">Entre na sua conta</h2>
+        <p id="login-gate-description">Para continuar, faça login ou crie uma conta Visão Boa.</p>
+        <div class="login-gate-actions">
+            <a class="login-gate-primary" id="loginGateEnter" href="{{ url_for('login', next='checkout') }}">Entrar</a>
+            <a class="login-gate-secondary" id="loginGateCreate" href="{{ url_for('criar_conta', next='checkout') }}">Criar conta</a>
+        </div>
+        <a class="login-gate-recovery" href="{{ url_for('recuperar_senha') }}">Esqueci minha senha</a>
+    </section>
+</div>
